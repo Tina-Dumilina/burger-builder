@@ -15,6 +15,7 @@ type BuildControlsType = {
   disabled: Record<Ingredients, boolean>
   price: number
   purchasable: boolean
+  showOrderSummary: () => void
 }
 
 const BuildControl = (props: BuildControlType) => {
@@ -52,7 +53,11 @@ export const BuildControls = (props: BuildControlsType) => {
           disabled={props.disabled[control.type]}
         />
       ))}
-      <button className={styles.order} disabled={!props.purchasable}>
+      <button
+        className={styles.order}
+        disabled={!props.purchasable}
+        onClick={props.showOrderSummary}
+      >
         ORDER NOW
       </button>
     </div>

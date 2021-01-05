@@ -1,12 +1,15 @@
 import React, {Component} from 'react'
 import {BurgerPreview} from 'ui/burger-preview'
 import {BuildControls} from 'ui/build-controls'
+import {OrderSummary} from 'ui/order-summary'
+import {Modal} from 'ui/modal'
 import {Ingredients} from 'types'
 
 type BurgerBuilderProps = Record<string, never>
 
 type BurgerBuilderState = {
   ingredients: Record<Ingredients, number>
+  showModal: boolean
 }
 
 const INGREDIENT_PRICES = {
@@ -26,6 +29,7 @@ export class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderSt
       cheese: 0,
       meat: 0,
     },
+    showModal: false,
   }
 
   calculateTotalPrice = () => {
@@ -62,6 +66,14 @@ export class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderSt
     return disabledButtons
   }
 
+  showOrderSummary = () => {
+    this.setState({showModal: true})
+  }
+
+  closeOrderSummary = () => {
+    this.setState({showModal: false})
+  }
+
   render() {
     const disabledButtons = this.getDisabledButtons()
     const totalPrice = this.calculateTotalPrice()
@@ -75,7 +87,13 @@ export class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderSt
           disabled={disabledButtons}
           price={totalPrice}
           purchasable={isPurchasable}
+          showOrderSummary={this.showOrderSummary}
         />
+        {this.state.showModal && (
+          <Modal onClose={this.closeOrderSummary}>
+            <OrderSummary ingredients={this.state.ingredients} />
+          </Modal>
+        )}
       </>
     )
   }
