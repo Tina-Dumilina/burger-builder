@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
+import {Backdrop} from 'ui/backdrop'
 import styles from './styles.module.scss'
 
 type ModalState = {
@@ -27,7 +28,7 @@ export class Modal extends Component<ModalProps, ModalState> {
   render() {
     return ReactDOM.createPortal(
       <>
-        <div className={styles.backdrop} onClick={this.props.onClose} />
+        <Backdrop onClick={this.props.onClose} />
         <div className={styles.modal}>{this.props.children}</div>
       </>,
       this.state.container,

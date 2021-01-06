@@ -1,0 +1,27 @@
+.drawer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 200;
+  width: 280px;
+  max-width: 70%;
+  height: 100%;
+  padding: 32px 16px;
+  background-color: white;
+  box-sizing: border-box;
+  transform: translateX(-100%);
+  transition: transform .3s ease-out;
+
+  &[data-open="true"] {
+    transform: translateX(0);
+  }
+
+  @media (min-width: 500px) {
+    display: none;
+  }
+}
+
+.image {
+  height: 11%;
+  margin-bottom: 32px;
+}
