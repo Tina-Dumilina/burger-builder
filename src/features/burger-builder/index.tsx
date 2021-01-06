@@ -74,6 +74,10 @@ export class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderSt
     this.setState({showModal: false})
   }
 
+  purchaseContinue = () => {
+    alert('You continued!')
+  }
+
   render() {
     const disabledButtons = this.getDisabledButtons()
     const totalPrice = this.calculateTotalPrice()
@@ -91,7 +95,12 @@ export class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderSt
         />
         {this.state.showModal && (
           <Modal onClose={this.closeOrderSummary}>
-            <OrderSummary ingredients={this.state.ingredients} />
+            <OrderSummary
+              ingredients={this.state.ingredients}
+              onCancel={this.closeOrderSummary}
+              onContinue={this.purchaseContinue}
+              price={totalPrice}
+            />
           </Modal>
         )}
       </>
