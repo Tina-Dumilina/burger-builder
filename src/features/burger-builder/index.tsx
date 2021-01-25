@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {History} from 'history'
 import {orderProvider} from 'utils/order-provider'
 import {BurgerPreview} from 'ui/burger-preview'
 import {BuildControls} from 'ui/build-controls'
@@ -7,7 +8,9 @@ import {Modal} from 'ui/modal'
 import {Loading} from 'ui/loading'
 import {Ingredients} from 'types'
 
-type BurgerBuilderProps = Record<string, never>
+type BurgerBuilderProps = {
+  history: History
+}
 
 type BurgerBuilderState = {
   ingredients: Record<Ingredients, number>
@@ -93,11 +96,16 @@ export class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderSt
       },
       deliveryMethod: 'fastest',
     }
-    orderProvider
-      .post('/orders.json', order)
-      .then((response) => console.log(response))
-      .catch((error) => console.log(error))
-      .finally(() => this.setState({loading: false, showModal: false}))
+    // orderProvider
+    //   .post('/orders.json', order)
+    //   .then((response) => console.log(response))
+    //   .catch((error) => console.log(error))
+    //   .finally(() => this.setState({loading: false, showModal: false}))
+    const keys = Object.keys(this.state.ingredients) as Ingredients[]
+    const queryParams = keys
+      .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(this.state.ingredients[key])}`)
+      .join('&')
+    this.props.history.push({pathname: '/checkout', search: `?${queryParams}`})
   }
 
   render() {
