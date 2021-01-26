@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './styles.module.scss'
 
 type ButtonType = {
-  onClick: () => void
+  onClick?: () => void
   type: 'success' | 'danger'
   children: React.ReactNode
 }

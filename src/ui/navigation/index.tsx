@@ -1,4 +1,5 @@
 import React from 'react'
+import {NavLink} from 'react-router-dom'
 import styles from './styles.module.scss'
 
 export const Navigation = () => {
@@ -6,14 +7,14 @@ export const Navigation = () => {
     <nav>
       <ul className={styles.list}>
         <li className={styles.item}>
-          <a href="/" className={styles.link}>
+          <NavLink to="/" exact activeClassName={styles.active} className={styles.link}>
             BurgerBuilder
-          </a>
+          </NavLink>
         </li>
         <li className={styles.item}>
-          <a href="/" className={styles.link}>
-            Checkout
-          </a>
+          <NavLink to="/orders" activeClassName={styles.active} className={styles.link}>
+            Orders
+          </NavLink>
         </li>
       </ul>
     </nav>

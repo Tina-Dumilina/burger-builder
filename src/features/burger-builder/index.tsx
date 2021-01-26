@@ -1,11 +1,9 @@
 import React, {Component} from 'react'
 import {History} from 'history'
-import {orderProvider} from 'utils/order-provider'
 import {BurgerPreview} from 'ui/burger-preview'
 import {BuildControls} from 'ui/build-controls'
 import {OrderSummary} from 'ui/order-summary'
 import {Modal} from 'ui/modal'
-import {Loading} from 'ui/loading'
 import {Ingredients} from 'types'
 
 type BurgerBuilderProps = {
@@ -15,7 +13,6 @@ type BurgerBuilderProps = {
 type BurgerBuilderState = {
   ingredients: Record<Ingredients, number>
   showModal: boolean
-  loading: boolean
 }
 
 const INGREDIENT_PRICES = {
@@ -35,7 +32,6 @@ export class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderSt
       meat: 0,
     },
     showModal: false,
-    loading: false,
   }
 
   calculateTotalPrice = () => {
@@ -81,26 +77,6 @@ export class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderSt
   }
 
   purchaseContinue = () => {
-    this.setState({loading: true})
-    const order = {
-      ingredients: this.state.ingredients,
-      price: this.calculateTotalPrice(),
-      customer: {
-        name: 'Tina',
-        address: {
-          street: 'Test street',
-          zipCode: '41351',
-          country: 'Russia',
-        },
-        email: 'test@test.com',
-      },
-      deliveryMethod: 'fastest',
-    }
-    // orderProvider
-    //   .post('/orders.json', order)
-    //   .then((response) => console.log(response))
-    //   .catch((error) => console.log(error))
-    //   .finally(() => this.setState({loading: false, showModal: false}))
     const keys = Object.keys(this.state.ingredients) as Ingredients[]
     const queryParams = keys
       .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(this.state.ingredients[key])}`)
@@ -125,16 +101,12 @@ export class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderSt
         />
         {this.state.showModal && (
           <Modal onClose={this.closeOrderSummary}>
-            {this.state.loading ? (
-              <Loading />
-            ) : (
-              <OrderSummary
-                ingredients={this.state.ingredients}
-                onCancel={this.closeOrderSummary}
-                onContinue={this.purchaseContinue}
-                price={totalPrice}
-              />
-            )}
+            <OrderSummary
+              ingredients={this.state.ingredients}
+              onCancel={this.closeOrderSummary}
+              onContinue={this.purchaseContinue}
+              price={totalPrice}
+            />
           </Modal>
         )}
       </>

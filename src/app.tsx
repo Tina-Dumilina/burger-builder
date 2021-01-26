@@ -3,6 +3,7 @@ import {BrowserRouter, Route} from 'react-router-dom'
 import {Layout} from 'ui/layout'
 import {Checkout} from 'features/checkout'
 import {BurgerBuilder} from 'features/burger-builder'
+import {Orders} from 'features/orders'
 import {ErrorBoundary} from 'ui/error-boundary'
 import './index.css'
 
@@ -23,6 +24,7 @@ export class App extends Component {
           <ErrorBoundary>
             <Route path="/" exact component={BurgerBuilder} />
             <Route path="/checkout" component={Checkout} />
+            <Route path="/orders" component={Orders} />
           </ErrorBoundary>
         </Layout>
       </BrowserRouter>

@@ -39,7 +39,8 @@ nav {
   box-sizing: border-box;
 
   &:hover,
-  &:active {
+  &:active,
+  &.active {
     color: #40a4c8;
     background-color: initial;
     border-bottom: none;
