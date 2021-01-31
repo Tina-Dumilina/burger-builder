@@ -13,7 +13,7 @@ export const Dropdown = ({name, value, options, onChange}: DropdownProps) => {
     <div className={styles.wrapper}>
       <select className={styles.dropdown} name={name} value={value} onChange={onChange}>
         {options.map((option) => (
-          <option key={option.value} value={option.value}>
+          <option key={option.value} value={option.value} disabled={option.disabled}>
             {option.label}
           </option>
         ))}

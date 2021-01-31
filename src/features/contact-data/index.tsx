@@ -55,6 +55,11 @@ const validators = (values) => {
         errors.country = 'Required field'
       }
     },
+    deliveryMethod: () => {
+      if (!values.deliveryMethod) {
+        errors.deliveryMethod = 'Required field'
+      }
+    },
   }
 
   const errors: Record<string, string> = {}
@@ -153,6 +158,7 @@ export class ContactData extends Component<ContactDataProps, ContactDataState> {
                   <Dropdown
                     onChange={(e) => onChange(e.target.value)}
                     options={[
+                      {label: 'Choose delivery method', value: '', disabled: true},
                       {label: 'Fastest', value: 'fastest'},
                       {label: 'Cheapest', value: 'cheapest'},
                     ]}
