@@ -21,4 +21,9 @@
   &[data-type='danger'] {
     color: #944317;
   }
+
+  &:disabled {
+    color: #ccc;
+    cursor: default;
+  }
 }

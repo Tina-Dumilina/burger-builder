@@ -1,0 +1,32 @@
+.wrapper {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.input {
+  width: 100%;
+  outline: none;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  font: inherit;
+  padding: 6px 10px;
+
+  &:focus {
+    outline: none;
+    background-color: #ccc;
+  }
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  text-align: left;
+  display: block;
+}
