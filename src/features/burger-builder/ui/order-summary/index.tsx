@@ -24,7 +24,7 @@ export const OrderSummary = ({ingredients, onContinue, onCancel, price}: OrderSu
       <p>A delicious order with the following ingredients:</p>
       <ul>{ingredientsSummary()}</ul>
       <p>
-        <strong>Total price: {price}$</strong>
+        <strong>Total price: {Number(price).toFixed(2)}$</strong>
       </p>
       <p>Continue to Checkout?</p>
       <Button type="danger" onClick={onCancel}>

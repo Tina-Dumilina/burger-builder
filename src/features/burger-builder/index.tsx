@@ -1,69 +1,37 @@
 import React, {Component} from 'react'
 import {History} from 'history'
+import {connect} from 'react-redux'
 import {BurgerPreview} from 'ui/burger-preview'
-import {BuildControls} from 'ui/build-controls'
-import {OrderSummary} from 'ui/order-summary'
 import {Modal} from 'ui/modal'
 import {Ingredients} from 'types'
+import {BuildControls} from './ui/build-controls'
+import {OrderSummary} from './ui/order-summary'
+import {addIngredient, removeIngredient} from './actions'
+export {reducer} from './reducer'
 
 type BurgerBuilderProps = {
   history: History
+  ingredients: Record<Ingredients, number>
+  addIngredient: (value: string) => void
+  removeIngredient: (value: string) => void
+  totalPrice: number
 }
 
 type BurgerBuilderState = {
-  ingredients: Record<Ingredients, number>
   showModal: boolean
 }
-
-const INGREDIENT_PRICES = {
-  salad: 0.5,
-  cheese: 0.4,
-  meat: 1.3,
-  bacon: 0.7,
-}
-
-const BASE_PRICE = 4
-export class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderState> {
+class BurgerBuilderComponent extends Component<BurgerBuilderProps, BurgerBuilderState> {
   state = {
-    ingredients: {
-      salad: 0,
-      bacon: 0,
-      cheese: 0,
-      meat: 0,
-    },
     showModal: false,
   }
 
-  calculateTotalPrice = () => {
-    const ingredients = Object.keys(this.state.ingredients) as Ingredients[]
-    const ingredientsPrice = ingredients.reduce(
-      (acc, ingredient) => acc + INGREDIENT_PRICES[ingredient] * this.state.ingredients[ingredient],
-      0,
-    )
-    return BASE_PRICE + ingredientsPrice
-  }
-
   isPurchasable = () => {
-    return Object.values(this.state.ingredients).reduce((acc, value) => (acc += value), 0) > 0
-  }
-
-  addIngredient = (type: Ingredients) => {
-    this.setState((prevState) => ({
-      ingredients: {...prevState.ingredients, [type]: prevState.ingredients[type] + 1},
-    }))
-  }
-
-  removeIngredient = (type: Ingredients) => {
-    if (this.state.ingredients[type] > 0) {
-      this.setState((prevState) => ({
-        ingredients: {...prevState.ingredients, [type]: prevState.ingredients[type] - 1},
-      }))
-    }
+    return Object.values(this.props.ingredients).reduce((acc, value) => (acc += value), 0) > 0
   }
 
   getDisabledButtons = () => {
     const disabledButtons = Object.fromEntries(
-      Object.entries(this.state.ingredients).map(([key, value]) => [key, value <= 0]),
+      Object.entries(this.props.ingredients).map(([key, value]) => [key, value <= 0]),
     ) as Record<Ingredients, boolean>
     return disabledButtons
   }
@@ -77,23 +45,19 @@ export class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderSt
   }
 
   purchaseContinue = () => {
-    const keys = Object.keys(this.state.ingredients) as Ingredients[]
-    const queryParams = keys
-      .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(this.state.ingredients[key])}`)
-      .join('&')
-    this.props.history.push({pathname: '/checkout', search: `?${queryParams}`})
+    this.props.history.push({pathname: '/checkout'})
   }
 
   render() {
     const disabledButtons = this.getDisabledButtons()
-    const totalPrice = this.calculateTotalPrice()
     const isPurchasable = this.isPurchasable()
+    const {ingredients, addIngredient, removeIngredient, totalPrice} = this.props
     return (
       <>
-        <BurgerPreview ingredients={this.state.ingredients} />
+        <BurgerPreview ingredients={ingredients} />
         <BuildControls
-          addIngredient={this.addIngredient}
-          removeIngredient={this.removeIngredient}
+          addIngredient={addIngredient}
+          removeIngredient={removeIngredient}
           disabled={disabledButtons}
           price={totalPrice}
           purchasable={isPurchasable}
@@ -102,7 +66,7 @@ export class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderSt
         {this.state.showModal && (
           <Modal onClose={this.closeOrderSummary}>
             <OrderSummary
-              ingredients={this.state.ingredients}
+              ingredients={ingredients}
               onCancel={this.closeOrderSummary}
               onContinue={this.purchaseContinue}
               price={totalPrice}
@@ -113,3 +77,15 @@ export class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderSt
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  ingredients: state.burger.ingredients,
+  totalPrice: state.burger.totalPrice,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  addIngredient: (ingredient) => dispatch(addIngredient(ingredient)),
+  removeIngredient: (ingredient) => dispatch(removeIngredient(ingredient)),
+})
+
+export const BurgerBuilder = connect(mapStateToProps, mapDispatchToProps)(BurgerBuilderComponent)

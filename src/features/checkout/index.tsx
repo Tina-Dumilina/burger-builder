@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {History} from 'history'
 import {Route} from 'react-router-dom'
+import {connect} from 'react-redux'
 import {ContactData} from 'features/contact-data'
 import {CheckoutSummary} from './ui/checkout-summary'
 import {Ingredients} from 'types'
@@ -8,26 +9,12 @@ import {Ingredients} from 'types'
 type CheckoutProps = {
   history: History
   location: Location
-}
-
-type CheckoutState = {
   ingredients: Record<Ingredients, number>
 }
 
-export class Checkout extends Component<CheckoutProps, CheckoutState> {
-  state = {
-    ingredients: {
-      salad: 1,
-      bacon: 1,
-      cheese: 1,
-      meat: 1,
-    },
-  }
+type CheckoutState = Record<never, never>
 
-  componentDidMount() {
-    const query = new URLSearchParams(this.props.location.search)
-  }
-
+class CheckoutComponent extends Component<CheckoutProps, CheckoutState> {
   cancelCheckout = () => {
     this.props.history.goBack()
   }
@@ -40,15 +27,18 @@ export class Checkout extends Component<CheckoutProps, CheckoutState> {
     return (
       <div>
         <CheckoutSummary
-          ingredients={this.state.ingredients}
+          ingredients={this.props.ingredients}
           cancelCheckout={this.cancelCheckout}
           continueCheckout={this.continueCheckout}
         />
-        <Route
-          path="/checkout/contact-data"
-          render={(props) => <ContactData ingredients={this.state.ingredients} {...props} />}
-        />
+        <Route path="/checkout/contact-data" component={ContactData} />
       </div>
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  ingredients: state.burger.ingredients,
+})
+
+export const Checkout = connect(mapStateToProps)(CheckoutComponent)

@@ -42,7 +42,7 @@ export const BuildControls = (props: BuildControlsType) => {
   return (
     <div className={styles.controls}>
       <p>
-        Current price: <strong>{props.price}$</strong>
+        Current price: <strong>{Number(props.price).toFixed(2)}$</strong>
       </p>
       {controls.map((control) => (
         <BuildControl

@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import {History} from 'history'
 import {orderProvider} from 'utils/order-provider'
 import {Ingredients} from 'types'
@@ -11,6 +12,7 @@ import styles from './styles.module.scss'
 
 type ContactDataProps = {
   ingredients: Record<Ingredients, number>
+  totalPrice: number
   history: History
 }
 
@@ -66,7 +68,7 @@ const validators = (values) => {
   Object.keys(values).forEach((key) => rules[key] && rules[key]())
   return errors
 }
-export class ContactData extends Component<ContactDataProps, ContactDataState> {
+export class ContactDataComponent extends Component<ContactDataProps, ContactDataState> {
   state = {
     form: {
       name: '',
@@ -87,6 +89,7 @@ export class ContactData extends Component<ContactDataProps, ContactDataState> {
     this.setState({loading: true})
     const order = {
       ingredients: this.props.ingredients,
+      price: this.props.totalPrice,
       order: this.state.form,
     }
     orderProvider
@@ -180,3 +183,10 @@ export class ContactData extends Component<ContactDataProps, ContactDataState> {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  ingredients: state.burger.ingredients,
+  totalPrice: state.burger.totalPrice,
+})
+
+export const ContactData = connect(mapStateToProps)(ContactDataComponent)
