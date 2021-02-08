@@ -1,42 +1,43 @@
 import React, {Component} from 'react'
-import {orderProvider} from 'utils/order-provider'
+import {connect} from 'react-redux'
+import {Loading} from 'ui/loading'
 import {Order} from './ui/order'
+import {fetchOrders} from './actions'
 
-type OrderProps = Record<never, any>
-type OrderState = {
-  loading: boolean
+type OrderProps = {
   orders: any[]
+  loading: boolean
+  fetchOrders: () => void
 }
 
-export class Orders extends Component<OrderProps, OrderState> {
-  state = {
-    orders: [],
-    loading: true,
-  }
+type OrderState = Record<never, any>
 
+class OrdersComponent extends Component<OrderProps, OrderState> {
   componentDidMount() {
-    orderProvider
-      .get('/orders.json')
-      .then((response) => {
-        const orders = Object.keys(response.data).reduce<any[]>((acc, key) => {
-          acc.push({key, ...response.data[key]})
-          return acc
-        }, [])
-        this.setState({orders: orders})
-      })
-      .catch((error) => {
-        throw new Error('Erorr')
-      })
-      .finally(() => this.setState({loading: false}))
+    this.props.fetchOrders()
   }
 
   render() {
-    return (
+    return this.props.loading ? (
+      <Loading />
+    ) : (
       <div>
-        {this.state.orders.map((order: any) => (
+        {this.props.orders?.map((order: any) => (
           <Order key={order?.key} ingredients={order.ingredients} price={order.price} />
         ))}
       </div>
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  orders: state.orders.orders,
+  loading: state.orders.loading,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchOrders: () => dispatch(fetchOrders()),
+})
+
+export const Orders = connect(mapStateToProps, mapDispatchToProps)(OrdersComponent)
+export {reducer} from './reducer'

@@ -23,6 +23,7 @@ export const BurgerPreview = ({ingredients}: BurgerPreviewType) => {
 }
 
 function transformIngredientsToArray(object: Record<Ingredients, number>): JSX.Element[] {
+  if (object === null) return []
   const keys = Object.keys(object) as Ingredients[]
   return keys.flatMap((key) => {
     return Array.from({length: object[key]}).map((_, index) => (

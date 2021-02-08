@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {History} from 'history'
-import {orderProvider} from 'utils/order-provider'
 import {Ingredients} from 'types'
 import {Form, Field, Submit} from 'features/form'
 import {Button} from 'ui/button'
@@ -9,11 +8,14 @@ import {Loading} from 'ui/loading'
 import {Input} from 'ui/input'
 import {Dropdown} from 'ui/dropdown'
 import styles from './styles.module.scss'
+import {makeOrder} from './actions'
 
 type ContactDataProps = {
   ingredients: Record<Ingredients, number>
   totalPrice: number
   history: History
+  makeOrder: (data: any) => void
+  status: 'initial' | 'loading' | 'success' | 'error'
 }
 
 type ContactDataState = {
@@ -25,7 +27,6 @@ type ContactDataState = {
     zipCode: string
     country: string
   }
-  loading: boolean
 }
 
 const validators = (values) => {
@@ -78,7 +79,6 @@ export class ContactDataComponent extends Component<ContactDataProps, ContactDat
       country: '',
       deliveryMethod: '',
     },
-    loading: false,
   }
 
   setFormValues = (values) => {
@@ -86,26 +86,21 @@ export class ContactDataComponent extends Component<ContactDataProps, ContactDat
   }
 
   makeOrder = () => {
-    this.setState({loading: true})
     const order = {
       ingredients: this.props.ingredients,
       price: this.props.totalPrice,
       order: this.state.form,
     }
-    orderProvider
-      .post('/orders.json', order)
-      .then((response) => console.log(response))
-      .catch((error) => console.log(error))
-      .finally(() => {
-        this.setState({loading: false})
-        this.props.history.push('/')
-      })
+    this.props.makeOrder(order)
+    if (this.props.status === 'success') {
+      this.props.history.push('/')
+    }
   }
 
   render() {
     return (
       <div className={styles.contact}>
-        {this.state.loading ? (
+        {this.props.status === 'loading' ? (
           <Loading />
         ) : (
           <>
@@ -187,6 +182,12 @@ export class ContactDataComponent extends Component<ContactDataProps, ContactDat
 const mapStateToProps = (state) => ({
   ingredients: state.burger.ingredients,
   totalPrice: state.burger.totalPrice,
+  status: state.contactData.status,
 })
 
-export const ContactData = connect(mapStateToProps)(ContactDataComponent)
+const mapDispatchToProps = (dispatch) => ({
+  makeOrder: (data) => dispatch(makeOrder(data)),
+})
+
+export {reducer} from './reducer'
+export const ContactData = connect(mapStateToProps, mapDispatchToProps)(ContactDataComponent)

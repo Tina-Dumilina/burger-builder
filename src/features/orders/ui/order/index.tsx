@@ -25,7 +25,7 @@ export const Order = ({price, ingredients}: OrderType) => {
         ))}
       </p>
       <p>
-        Price: <strong>USD {price}</strong>
+        Price: <strong>USD {Number(price).toFixed(2)}</strong>
       </p>
     </div>
   )

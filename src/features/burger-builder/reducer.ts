@@ -1,4 +1,9 @@
-import {ADD_INGREDIENT, REMOVE_INGREDIENT} from './constants'
+import {
+  ADD_INGREDIENT,
+  REMOVE_INGREDIENT,
+  SET_INGREDIENTS,
+  FETCH_INGREDIENTS_FAILED,
+} from './constants'
 
 const BASE_PRICE = 4
 
@@ -10,13 +15,9 @@ const INGREDIENT_PRICES = {
 }
 
 const initialState = {
-  ingredients: {
-    salad: 0,
-    bacon: 0,
-    cheese: 0,
-    meat: 0,
-  },
+  ingredients: {},
   totalPrice: BASE_PRICE,
+  error: false,
 }
 
 export const reducer = (state = initialState, action) => {
@@ -38,6 +39,18 @@ export const reducer = (state = initialState, action) => {
           [action.payload]: state.ingredients[action.payload] - 1,
         },
         totalPrice: state.totalPrice - INGREDIENT_PRICES[action.payload],
+      }
+    case SET_INGREDIENTS:
+      return {
+        ...state,
+        ingredients: action.payload,
+        error: false,
+        totalPrice: BASE_PRICE,
+      }
+    case FETCH_INGREDIENTS_FAILED:
+      return {
+        ...state,
+        error: true,
       }
   }
   return state
