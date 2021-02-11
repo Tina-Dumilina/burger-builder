@@ -16,6 +16,7 @@ type BuildControlsType = {
   price: number
   purchasable: boolean
   showOrderSummary: () => void
+  isAuthenticated: boolean
 }
 
 const BuildControl = (props: BuildControlType) => {
@@ -58,7 +59,7 @@ export const BuildControls = (props: BuildControlsType) => {
         disabled={!props.purchasable}
         onClick={props.showOrderSummary}
       >
-        ORDER NOW
+        {props.isAuthenticated ? 'ORDER NOW' : 'SIGN UP TO ORDER'}
       </button>
     </div>
   )

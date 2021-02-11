@@ -3,11 +3,11 @@ import {MAKE_ORDER_SUCCESS, MAKE_ORDER_FAIL, MAKE_ORDER_START} from './constants
 
 export const makeOrderStart = () => ({type: MAKE_ORDER_START})
 
-export const makeOrder = (data) => {
+export const makeOrder = (data, token) => {
   return (dispatch) => {
     dispatch(makeOrderStart())
     orderProvider
-      .post('/orders.json', data)
+      .post(`/orders.json?auth=${token}`, data)
       .then((response) => dispatch(makeOrderSuccess(response.data.name, data)))
       .catch((error) => dispatch(makeOrderFail(error)))
   }

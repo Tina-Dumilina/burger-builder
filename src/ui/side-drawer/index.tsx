@@ -7,6 +7,7 @@ import styles from './styles.module.scss'
 type SideDrawerType = {
   onClose: () => void
   isShown: boolean
+  isAuthenticated: boolean
 }
 
 export const SideDrawer = (props: SideDrawerType) => {
@@ -17,7 +18,7 @@ export const SideDrawer = (props: SideDrawerType) => {
         <div className={styles.image}>
           <Logo />
         </div>
-        <Navigation />
+        <Navigation isAuthenticated={props.isAuthenticated} />
       </div>
     </>
   )

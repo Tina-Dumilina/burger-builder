@@ -14,7 +14,9 @@ type ContactDataProps = {
   ingredients: Record<Ingredients, number>
   totalPrice: number
   history: History
-  makeOrder: (data: any) => void
+  token: string
+  userId: string
+  makeOrder: (data: any, token: string) => void
   status: 'initial' | 'loading' | 'success' | 'error'
 }
 
@@ -90,8 +92,9 @@ export class ContactDataComponent extends Component<ContactDataProps, ContactDat
       ingredients: this.props.ingredients,
       price: this.props.totalPrice,
       order: this.state.form,
+      userId: this.props.userId,
     }
-    this.props.makeOrder(order)
+    this.props.makeOrder(order, this.props.token)
     if (this.props.status === 'success') {
       this.props.history.push('/')
     }
@@ -183,10 +186,12 @@ const mapStateToProps = (state) => ({
   ingredients: state.burger.ingredients,
   totalPrice: state.burger.totalPrice,
   status: state.contactData.status,
+  token: state.auth.token,
+  userId: state.auth.userId,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  makeOrder: (data) => dispatch(makeOrder(data)),
+  makeOrder: (data, token) => dispatch(makeOrder(data, token)),
 })
 
 export {reducer} from './reducer'

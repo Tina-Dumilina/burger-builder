@@ -7,11 +7,12 @@ function adaptOrders(data) {
     return acc
   }, [])
 }
-export const fetchOrders = () => {
+export const fetchOrders = (token, userId) => {
   return (dispatch) => {
     dispatch(fetchOrdersStart())
+    const queryParams = `?auth=${token}&orderBy="userId"&equalTo="${userId}"`
     orderProvider
-      .get('/orders.json')
+      .get(`/orders.json${queryParams}`)
       .then((response) => dispatch(fetchOrdersSuccess(adaptOrders(response.data))))
       .catch((error) => dispatch(fetchOrdersFail(error)))
   }

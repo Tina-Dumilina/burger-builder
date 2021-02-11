@@ -7,7 +7,6 @@ import {Ingredients} from 'types'
 import {BuildControls} from './ui/build-controls'
 import {OrderSummary} from './ui/order-summary'
 import {addIngredient, removeIngredient, fetchIngredients} from './actions'
-export {reducer} from './reducer'
 
 type BurgerBuilderProps = {
   history: History
@@ -17,6 +16,7 @@ type BurgerBuilderProps = {
   fetchIngredients: () => void
   totalPrice: number
   error: boolean
+  isAuthenticated: boolean
 }
 
 type BurgerBuilderState = {
@@ -43,7 +43,11 @@ class BurgerBuilderComponent extends Component<BurgerBuilderProps, BurgerBuilder
   }
 
   showOrderSummary = () => {
-    this.setState({showModal: true})
+    if (this.props.isAuthenticated) {
+      this.setState({showModal: true})
+    } else {
+      this.props.history.push('/auth')
+    }
   }
 
   closeOrderSummary = () => {
@@ -57,7 +61,7 @@ class BurgerBuilderComponent extends Component<BurgerBuilderProps, BurgerBuilder
   render() {
     const disabledButtons = this.getDisabledButtons()
     const isPurchasable = this.isPurchasable()
-    const {ingredients, addIngredient, removeIngredient, totalPrice} = this.props
+    const {ingredients, addIngredient, removeIngredient, totalPrice, isAuthenticated} = this.props
     return (
       <>
         <BurgerPreview ingredients={ingredients} />
@@ -68,6 +72,7 @@ class BurgerBuilderComponent extends Component<BurgerBuilderProps, BurgerBuilder
           price={totalPrice}
           purchasable={isPurchasable}
           showOrderSummary={this.showOrderSummary}
+          isAuthenticated={isAuthenticated}
         />
         {this.state.showModal && (
           <Modal onClose={this.closeOrderSummary}>
@@ -88,6 +93,7 @@ const mapStateToProps = (state) => ({
   ingredients: state.burger.ingredients,
   totalPrice: state.burger.totalPrice,
   error: state.burger.error,
+  isAuthenticated: state.auth.token !== null,
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -97,3 +103,4 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 export const BurgerBuilder = connect(mapStateToProps, mapDispatchToProps)(BurgerBuilderComponent)
+export {reducer} from './reducer'

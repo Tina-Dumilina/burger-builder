@@ -5,6 +5,7 @@ import styles from './styles.module.scss'
 
 type ToolbarType = {
   showSideDrawer: () => void
+  isAuthenticated: boolean
 }
 
 export const Toolbar = (props: ToolbarType) => {
@@ -18,7 +19,7 @@ export const Toolbar = (props: ToolbarType) => {
       <div className={styles.image}>
         <Logo />
       </div>
-      <Navigation />
+      <Navigation isAuthenticated={props.isAuthenticated} />
     </header>
   )
 }

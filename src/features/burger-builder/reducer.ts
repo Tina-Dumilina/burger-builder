@@ -18,6 +18,7 @@ const initialState = {
   ingredients: {},
   totalPrice: BASE_PRICE,
   error: false,
+  building: false,
 }
 
 export const reducer = (state = initialState, action) => {
@@ -30,6 +31,7 @@ export const reducer = (state = initialState, action) => {
           [action.payload]: state.ingredients[action.payload] + 1,
         },
         totalPrice: state.totalPrice + INGREDIENT_PRICES[action.payload],
+        building: true,
       }
     case REMOVE_INGREDIENT:
       return {
@@ -39,6 +41,7 @@ export const reducer = (state = initialState, action) => {
           [action.payload]: state.ingredients[action.payload] - 1,
         },
         totalPrice: state.totalPrice - INGREDIENT_PRICES[action.payload],
+        building: true,
       }
     case SET_INGREDIENTS:
       return {
@@ -46,6 +49,7 @@ export const reducer = (state = initialState, action) => {
         ingredients: action.payload,
         error: false,
         totalPrice: BASE_PRICE,
+        building: false,
       }
     case FETCH_INGREDIENTS_FAILED:
       return {
