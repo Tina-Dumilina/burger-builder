@@ -18,7 +18,7 @@ export const SideDrawer = (props: SideDrawerType) => {
         <div className={styles.image}>
           <Logo />
         </div>
-        <Navigation isAuthenticated={props.isAuthenticated} />
+        <Navigation isAuthenticated={props.isAuthenticated} onClick={props.onClose} />
       </div>
     </>
   )

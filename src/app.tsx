@@ -28,14 +28,10 @@ class AppComponent extends Component<AppProps, AppState> {
           <ErrorBoundary>
             <Switch>
               <Route path="/" exact component={BurgerBuilder} />
-              {this.props.isAuthenticated && (
-                <>
-                  <Route path="/checkout" component={Checkout} />
-                  <Route path="/orders" component={Orders} />
-                  <Route path="/logout" component={Logout} />
-                </>
-              )}
-              {!this.props.isAuthenticated && <Route path="/auth" component={Auth} />}
+              <Route path="/checkout" component={Checkout} />
+              <Route path="/orders" component={Orders} />
+              <Route path="/logout" component={Logout} />
+              <Route path="/auth" component={Auth} />
               <Redirect to="/" />
             </Switch>
           </ErrorBoundary>

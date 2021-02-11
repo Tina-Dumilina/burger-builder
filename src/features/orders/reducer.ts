@@ -10,7 +10,7 @@ export const reducer = (state = initialState, action) => {
     case FETCH_ORDERS_START:
       return {...state, loading: true}
     case FETCH_ORDERS_SUCCESS:
-      return {...state, loading: false, orders: state.orders.concat(action.payload)}
+      return {...state, loading: false, orders: action.payload}
     case FETCH_ORDERS_FAIL:
       return {...state, loading: false}
     default:

@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
+import {Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {History} from 'history'
 import {Ingredients} from 'types'
 import {Form, Field, Submit} from 'features/form'
 import {Button} from 'ui/button'
@@ -13,11 +13,11 @@ import {makeOrder} from './actions'
 type ContactDataProps = {
   ingredients: Record<Ingredients, number>
   totalPrice: number
-  history: History
   token: string
   userId: string
   makeOrder: (data: any, token: string) => void
-  status: 'initial' | 'loading' | 'success' | 'error'
+  loading: boolean
+  finished: boolean
 }
 
 type ContactDataState = {
@@ -95,15 +95,14 @@ export class ContactDataComponent extends Component<ContactDataProps, ContactDat
       userId: this.props.userId,
     }
     this.props.makeOrder(order, this.props.token)
-    if (this.props.status === 'success') {
-      this.props.history.push('/')
-    }
   }
 
   render() {
-    return (
+    return this.props.finished ? (
+      <Redirect to="/" />
+    ) : (
       <div className={styles.contact}>
-        {this.props.status === 'loading' ? (
+        {this.props.loading ? (
           <Loading />
         ) : (
           <>
@@ -185,7 +184,8 @@ export class ContactDataComponent extends Component<ContactDataProps, ContactDat
 const mapStateToProps = (state) => ({
   ingredients: state.burger.ingredients,
   totalPrice: state.burger.totalPrice,
-  status: state.contactData.status,
+  loading: state.contactData.loading,
+  finished: state.contactData.finished,
   token: state.auth.token,
   userId: state.auth.userId,
 })

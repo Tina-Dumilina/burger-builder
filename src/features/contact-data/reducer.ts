@@ -1,7 +1,8 @@
 import {MAKE_ORDER_SUCCESS, MAKE_ORDER_FAIL, MAKE_ORDER_START} from './constants'
 
 const initialState = {
-  status: 'initial',
+  loading: false,
+  finished: false,
 }
 
 export const reducer = (state = initialState, action) => {
@@ -9,17 +10,18 @@ export const reducer = (state = initialState, action) => {
     case MAKE_ORDER_START:
       return {
         ...state,
-        status: 'loading',
+        loading: true,
       }
     case MAKE_ORDER_SUCCESS:
       return {
         ...state,
-        status: 'success',
+        loading: false,
+        finished: true,
       }
     case MAKE_ORDER_FAIL:
       return {
         ...state,
-        status: 'error',
+        loading: false,
       }
     default:
       return state
